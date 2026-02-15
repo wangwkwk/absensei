@@ -10,7 +10,12 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate', // Mengupdate Service Worker secara otomatis
+      injectRegister:'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      devOptions:{
+        enabled:true,
+        type:"module"
+      },
       manifest: {
         name: 'Nama Aplikasi Anda',
         short_name: 'AppAnda',
