@@ -17,9 +17,9 @@ export default defineConfig({
         type:"module"
       },
       manifest: {
-        name: 'Nama Aplikasi Anda',
-        short_name: 'AppAnda',
-        description: 'Deskripsi aplikasi Anda',
+        name: 'Absensei',
+        short_name: 'Absensei',
+        description: 'Aplikasi absensi berbasis website',
         theme_color: '#ffffff',
         icons: [
           {
