@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+
+@layer utilities{
+
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(15deg); }
+  40% { transform: rotate(-10deg); }
+  60% { transform: rotate(5deg); }
+  80% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Kita buat class custom agar tidak bentrok */
+.swing:hover {
+  animation: swing 1s ease-in-out;
+  transform-origin: bottom center;
+}
+
+  @keyframes quarterRotate{
+    0%{transform: rotate(0deg);}
+    20%{transform: rotate(-15deg);}
+    70%{transform: rotate(100deg);}
+    80%{transform: rotate(80deg);}
+    100%{transform: rotate(90deg);}
+  }
+  .group:hover .semiQuadRotate{
+    animation: quarterRotate 1s ease-in-out forwards;
+  }
+
+  @keyframes slideRight{
+    0%{transform: translateX(0);}
+    20%{transform: translateX(-0.1rem);}
+    80%{transform: translateX(0.4rem);}
+    100%{transform: translateX(0.3rem);}
+  }
+  .slideRight:hover{
+    animation: slideRight .3s ease-in-out forwards;
+  }
+  .slideRight:has(.categoryCreate:hover){
+    animation: slideRight .3s ease-in-out forwards;
+  }
+
+  
+}
+
+@theme{
+  @keyframes shakeX{
+    0%{transform: translateX(0);}
+    20%{transform: translateX(-.2vh);}
+    70%{transform: translateX(.4vh);}
+    80%{transform: translateX(.2vh)}
+    100%{transform: translateX(0);}
+  }
+  --animate-shake-x: shakeX 0.3s ease-in-out;
+}
+
+@utility animationShakeX{
+  animation: shakeX .3s ease-in-out;
+}
+
+
+@theme {
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+/* Cara paling aman di v4: gunakan nesting selector langsung */
+@utility animate-marquee {
+  white-space: nowrap;
+  display: inline-flex;
+  animation: marquee 4s linear infinite;
+  animation-play-state: paused;
+
+  /* Menargetkan parent dengan class .group saat di-hover */
+  .group:hover & {
+    animation-play-state: running;
+  }
+}

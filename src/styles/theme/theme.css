@@ -1,0 +1,6 @@
+@layer base {
+    [data-theme="absen"]{
+        --primary:"#0D3B3A";
+        --secondary:"#48B3AF";
+    }
+}
