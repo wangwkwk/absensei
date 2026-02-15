@@ -1,5 +1,5 @@
 import { Button, Card, Chip, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@heroui/react"
-import { type IAbsen, type IAbsenAllRecord, type tanggalList, } from "../../../components/type"
+import { type IAbsenAllRecord, type tanggalList, } from "../../../components/type"
 import { useEffect, useMemo, useState } from "react"
 import AddAbsenModal from "./addAbsenModal/addAbsenModal"
 import { FaTrash } from "react-icons/fa6"

@@ -1,4 +1,4 @@
-import { ListBox, Select, SelectPopover } from "@heroui/react"
+import { Select, SelectItem } from "@heroui/react"
 import { useMemo } from "react"
 
 interface props {
@@ -14,32 +14,23 @@ const bottomContent = (props:props) => useMemo(()=>{
     const {GENDER_LIST,KELAS_LIST,currentGender,currentKelas,handleGender,handleKelas} = props
     return(
         <div className="w-full flex gap-4">
-            <Select variant="primary" className="w-24" aria-label="gender" selectionMode="single" onChange={handleGender}>
-                <Select.Trigger>
-                    <Select.Value/>
-                    <Select.Indicator/>
-                </Select.Trigger>
-                <SelectPopover>
-            {GENDER_LIST.map((list)=>(
-                <ListBox>
-                    <ListBox.Item id={list.key} key={list.key}>
-                        {list.label}
-                    </ListBox.Item>
-                </ListBox>
-            ))}
-            {KELAS_LIST.map((list)=>(
-                <ListBox>
-                    <ListBox.Item id={list.key} key={list.key}>
-                        {list.label}
-                    </ListBox.Item>
-                </ListBox>
-            ))}
-                </SelectPopover>
+            <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" items={GENDER_LIST} selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
+            {(list)=>(
+                <SelectItem className="w-fit" key={list.key}>
+                    {list.label}
+                </SelectItem>
+            )}
+            </Select>
+            <Select label={"Kelas"} color="secondary" variant="underlined" className="w-24" aria-label="kelas" items={KELAS_LIST} selectedKeys={[`${currentKelas}`]} selectionMode="single" onChange={handleKelas}>
+            {(list)=>(
+                <SelectItem className="w-fit" key={list.key}>
+                    {list.label}
+                </SelectItem>
+            )}
             </Select>
 
         </div>
     )
 },[])
-
 
 export default bottomContent

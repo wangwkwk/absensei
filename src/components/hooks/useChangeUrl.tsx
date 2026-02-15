@@ -1,4 +1,4 @@
-import { type ChangeEvent, type Key, useEffect } from "react"
+import { type ChangeEvent, useEffect } from "react"
 import { useSearchParams } from "react-router"
 
 export const GENDER_LIST = [

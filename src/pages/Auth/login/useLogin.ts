@@ -18,7 +18,7 @@ const loginSchema = yup.object().shape({
 })
 
 const useLogin = () =>{
-    const [searchParams,setSearchParams] = useSearchParams()
+    const [searchParams] = useSearchParams()
     const {signIn} = useSession()
     // funsi usestate untuk mengidentifikasi true/false
     const [isVisible, setIsVisible] = useState(false)
