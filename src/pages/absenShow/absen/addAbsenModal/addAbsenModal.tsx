@@ -3,17 +3,17 @@ import { Controller } from "react-hook-form"
 import useAddAbsenModal from "./useAddAbsenModal"
 import { getLocalTimeZone, now } from "@internationalized/date"
 import { useEffect } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 
 interface Props{
     isOpen:boolean
     onClose:()=>void
-    refetchAbsen:()=>void
     onOpenChange:()=>void
-    refetchNavbar:()=>void
 }
 
 const AddAbsenModal = (props:Props) =>{
-const {isOpen,onClose,onOpenChange,refetchAbsen, refetchNavbar} = props
+const queryClient = useQueryClient()
+const {isOpen,onClose,onOpenChange} = props
 const {
     control,
     errors,
@@ -29,8 +29,8 @@ useEffect(()=>{
     setValue("date",now(getLocalTimeZone()))
 
     if(isSuccess){
-        refetchAbsen()
-        refetchNavbar()
+        queryClient.invalidateQueries({queryKey:["ABSEN"]})//absenDashboard
+        queryClient.invalidateQueries({queryKey:["absensi"]})//navbar
         onClose()
     }
 },[isSuccess])

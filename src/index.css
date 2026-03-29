@@ -10,7 +10,37 @@
     --secondary: #48B3AF;
 }
 
+@theme {
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  };
+
+  --animate-marquee-auto:marquee 4s linear infinite;
+}
+
 @theme inline{
     --color-primary: var(--primary);
     --color-secondary: var(--secondary);
 }
+
+@utility animate-marquee-auto {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: var(--animate-marquee);
+  animation-play-state: running;
+}
+
+/* Cara paling aman di v4: gunakan nesting selector langsung */
+@utility animate-marquee {
+  white-space: nowrap;
+  display: inline-flex;
+  animation: marquee 4s linear infinite;
+  animation-play-state: paused;
+
+  /* Menargetkan parent dengan class .group saat di-hover */
+  .group:hover & {
+    animation-play-state: running;
+  }
+}
+

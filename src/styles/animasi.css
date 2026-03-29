@@ -59,24 +59,3 @@
 @utility animationShakeX{
   animation: shakeX .3s ease-in-out;
 }
-
-
-@theme {
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-}
-
-/* Cara paling aman di v4: gunakan nesting selector langsung */
-@utility animate-marquee {
-  white-space: nowrap;
-  display: inline-flex;
-  animation: marquee 4s linear infinite;
-  animation-play-state: paused;
-
-  /* Menargetkan parent dengan class .group saat di-hover */
-  .group:hover & {
-    animation-play-state: running;
-  }
-}

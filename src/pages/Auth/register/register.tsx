@@ -9,20 +9,20 @@ const Register = () => {
 // mengimport fungsi funsi yang dibuat di useRegister
     const { visiblePassword, handleVisiblePassword, control, handleRegister, handleSubmit, isPendingRegister, errors } = useRegister()
 
-    titleChanger("Login")
+    titleChanger("Regist")
 
 
     return (
         <div className="flex  w-full h-screen items-center justify-center gap-10 lg:gap-20">
-                <Card className="bg-[#c4e4f8] flex items-center justify-center w-fit">
-                        <h2 className="text-2xl font-bold text-center text-secondary" >Buat Akun</h2>
+                <Card className="bg-[#c4e4f8] flex p-5 items-center  justify-center w-fit">
+                        <h2 className="text-2xl font-bold text-center text-black" >Buat Akun</h2>
                         <p className="mb-4 mt-2 text-small" >Sudah punya akun?&nbsp;<a className="font-semibold text-secondary" href="/auth/login">Login disini</a></p>
 
                         {errors.root && (
                             <p className="mb-2 font-medium text-danger">{errors?.root?.message}</p>
                     )}
                         <form 
-                        className={cn("flex w-80 flex-col items-center justify-center", Object.keys(errors).length > 0 ? "gap-2" : "gap-4")} 
+                        className={cn("flex w-80 flex-col items-center px-8 justify-center mt-4", Object.keys(errors).length > 0 ? "gap-2" : "gap-4")} 
                         onSubmit={handleSubmit(handleRegister)}>
                             {/* basic penggunaan react-hook-form untuk mengatur control*/}
                             <Controller name="username" 
@@ -31,8 +31,8 @@ const Register = () => {
                                 <Input
                                     {...field}
                                     value={field.value||""}
+                                    placeholder="Username"
                                     type="text"
-                                    variant="bordered"
                                     autoComplete="off"
                                     className={'font-semibold text-primary'}
                                     isInvalid={errors?.username !== undefined}
@@ -43,8 +43,8 @@ const Register = () => {
                             <Controller name="email" control={control} render={({field}) => (
                                <Input
                                     {...field}
+                                    placeholder="email@gmail.com"
                                     value={field.value||""}
-                                    variant="bordered"
                                     autoComplete="off"
                                     className={'font-semibold text-primary'}
                                     isInvalid={errors?.email !== undefined}
@@ -56,6 +56,7 @@ const Register = () => {
                                         <Input
                                         {...field}
                                         value={field.value||""}
+                                        placeholder="Password"
                                         type={visiblePassword.password ? "text" : "password"}
                                         autoComplete="off"
                                         className={`font-semibold text-primary `}
@@ -81,6 +82,7 @@ const Register = () => {
                                     autoComplete="off"
                                     className={`font-semibold text-primary `}
                                     isInvalid={errors?.password !== undefined}
+                                    placeholder="Konfirmasi Password"
                                     errorMessage={errors.password?.message}
                                     endContent={
                                         <button className="focus:outline-none absolute right-3"

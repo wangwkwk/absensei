@@ -1,7 +1,7 @@
 import { cn } from "../../components/libs/cn"
 import { DatePicker, Spinner } from "@heroui/react"
 import { getLocalTimeZone, today } from "@internationalized/date"
-import { type Dispatch, type SetStateAction } from "react"
+import { useEffect, type Dispatch, type SetStateAction } from "react"
 import { Controller } from "react-hook-form"
 import { FaPlus } from "react-icons/fa6"
 import { IoMdSend } from "react-icons/io"
@@ -14,10 +14,16 @@ interface Props{
     isPendingAddAbsensi:any;
     control:any;
     errors:any;
+    setValue: any
 }
 
 const InputNewAbsensi = (props:Props) =>{
-    const {create,handleAddAbsensi,handleSubmit,isPendingAddAbsensi,setCreate, control, errors} = props
+    const {create,handleAddAbsensi,handleSubmit,isPendingAddAbsensi,setCreate, control, errors, setValue} = props
+
+    useEffect(()=>{
+    setValue("date",today(getLocalTimeZone()))
+
+    },[create])
 
 return(
                             <div className={cn("flex p-2 group w-[90%] items-center justify-center has-[:hover]:bg-primary hover:bg-primary has-[:hover]:cursor-pointer slideRight transition-all rounded-xl",{"bg-primary w-[95%]":create})}>
@@ -31,8 +37,7 @@ return(
                                         control={control}
                                         render={({field})=>(
                                             <DatePicker
-                                            {...field}
-                                            value={field.value||today(getLocalTimeZone()) as any}
+                                            {...field}      
                                             variant="underlined"
                                             className="w-fit"
                                             hideTimeZone
@@ -68,11 +73,11 @@ return(
                                             {isPendingAddAbsensi?(
                                                 <Spinner color="white" size="sm"/>
                                             ):(
-                                                <IoMdSend size={22}/>
+                                                <IoMdSend size={22} className="cursor-pointer"/>
                                             )}
                                         </button>
                                     </form>
-                                    <strong className={cn("absolute lg:text-xl text-md transition-all translate-0",{"translate-y-12 scale-80":create})}>Buat absensi</strong>
+                                    <strong className={cn("absolute lg:text-lg text-md transition-all translate-0",{"translate-y-12 scale-80":create})}>Buat absensi</strong>
 
                             </div>
 

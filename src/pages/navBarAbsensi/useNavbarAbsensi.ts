@@ -6,13 +6,12 @@ import { type IData } from "../../components/type"
 import { type DateValue } from "@heroui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone, now, ZonedDateTime } from "@internationalized/date"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import {z} from "zod"
 import { useParams } from "react-router"
-import useAbsen from "../absenShow/absen/useAbsen"
 
 const addAbsensiSchema = z.object({date:z.custom<DateValue|ZonedDateTime>((value)=>{return value !== undefined},"Masukkan tanggal absensi")})
 
@@ -20,6 +19,7 @@ const useNavbarAbsensi = () =>{
 
 
 const {control, handleSubmit, formState:{errors}, reset, setValue} = useForm({resolver:zodResolver(addAbsensiSchema)})
+const queryClient = useQueryClient()
 
 const {id:categoryId} = useParams<{id:string}>()
 
@@ -42,16 +42,12 @@ const handleDeleteAbsensi = async (id:string) =>{
 }
 
 
-
 const handleDelete = (id:string) => mutate(id)
 
 const {data, refetch:refetchNavbar, isRefetching:isrefetchingNavbar} = useQuery<IData>({
     queryKey:["absensi",currentPage],
     queryFn:handleData,
 })
-
-const {refetchAbsen} = useAbsen()
-
 
 const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
     mutationFn:handleDeleteAbsensi,
@@ -60,8 +56,8 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
     },
     onSuccess:()=>{
         toast.success("Sukses menghapus Absensi")
-        refetchAbsen()
-        refetchNavbar()
+        queryClient.invalidateQueries({queryKey:["absensi"]})
+        queryClient.invalidateQueries({queryKey:["ABSEN"]})
     }
 })
 
@@ -80,13 +76,12 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
 
         onError:(error:any)=>{
             toast.error(error.response.data.meta.message)
-            setValue("date",now(getLocalTimeZone()))
             reset()
         },
         onSuccess: ()=>{
             toast.success("Berhasil menambah Absensi")
-            refetchNavbar()
-            refetchAbsen()
+            queryClient.invalidateQueries({queryKey:["absensi"]})
+            queryClient.invalidateQueries({queryKey:["ABSEN"]})
             reset()
             setCreate(false)
         }
@@ -105,6 +100,7 @@ return{
     create,
     setCreate,
     refetchNavbar,
+    setValue,
 
     currentPage,
     handlePage,

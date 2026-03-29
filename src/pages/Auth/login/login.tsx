@@ -14,7 +14,7 @@ const Login = () => {
     return (
         <div className="flex w-full min-h-screen items-center justify-center">
                 <Card className=" border-secondary bg-[#dbf4ff] p-5">
-                        <h2 className="text-3xl text-center font-bold text-secondary" >Login</h2>
+                        <h2 className="text-3xl text-center font-bold text-black" >Login</h2>
                         <p className="mb-4 mt-2 text-center text-small" >Belum punya akun?&nbsp;<a className="font-semibold text-secondary hover:text-secondary-600" href="/auth/register">Daftar disini</a></p>
                         <form 
                         className={cn("flex w-80 justify-center items-center flex-col", Object.keys(errors).length > 0 ? "gap-2" : "gap-4")} 
@@ -24,6 +24,7 @@ const Login = () => {
                                     <Input
                                     {...field}
                                     value={field.value||""}
+                                    placeholder="Username/email"
                                     autoComplete="off"
                                     className={'font-semibold text-primary'}
                                     isInvalid={errors?.identifier !== undefined}
@@ -42,6 +43,7 @@ const Login = () => {
                                         value={field.value||""}
                                         type={isVisible ? "text" : "password"}
                                         autoComplete="off"
+                                        placeholder="Password"
                                         className={`font-semibold text-primary `}
                                         isInvalid={errors?.password !== undefined}
                                         errorMessage={errors.password?.message}

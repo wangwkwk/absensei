@@ -9,11 +9,13 @@ import { type IAbsen } from "../../components/type";
 import InputNewAbsensi from "./InputAbsensi";
 import { Outlet, useParams } from "react-router";
 import useNavbarAbsensi from "./useNavbarAbsensi";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 const NavBarAbsensi = () =>{
 const [kategoryId, setKategoryId] = useState<string|undefined>()
 const [open, setOpen] = useState<boolean>(false)
-const {id} = useParams<{id:string}>()
+const {id:categoryId} = useParams<{id:string}>()
 const {absenId} = useParams<{absenId:string}>()
 
 const {
@@ -22,7 +24,7 @@ const {
     isPendingAddAbsensi,
     create,
     setCreate,
-
+    setValue,
     currentPage,
     handlePage,
 
@@ -55,14 +57,15 @@ const navbar = useRef<HTMLDivElement>(null)
             },[open]) 
     return(
         <div className="min-h-screen w-full">
-            <button className="fixed top-0 left-0 p-5 z-10" onClick={()=>setOpen(true)}>
-                <LuMenu size={50} />
+            <button className="absolute flex top-0 items-end gap-2 left-0 p-4 z-10" onClick={()=>setOpen(true)}>
+                <LuMenu size={40} />
+                <strong className="text-secondary font-sans text-3xl">Absensei</strong>
             </button>
             <div className="w-full overflow-hidden relative">
                 <div ref={navbar} className={cn("lg:w-1/5 py-5 w-fit bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all",{"-translate-x-80":open===false})}>
-                    <strong className="text-xl mb-2 border-font w-full h-fit flex justify-center"><a href={`/category/${id}`}>Daftar Absensi</a></strong>
+                    <strong className="text-xl mb-2 border-font w-full h-fit flex justify-center"><a href={`/category/${categoryId}`}>Daftar Absensi</a></strong>
                     <div className="w-full text-sm lg:text-medium h-10/12 flex-col flex px-5 justify-start  items-start text-shadow-2xs gap-1">
-                    <InputNewAbsensi create={create} setCreate={setCreate} control={control} errors={errors} handleAddAbsensi={handleAddAbsensi} handleSubmit={handleSubmit} isPendingAddAbsensi={isPendingAddAbsensi} />
+                    <InputNewAbsensi create={create} setCreate={setCreate} control={control} errors={errors} handleAddAbsensi={handleAddAbsensi} handleSubmit={handleSubmit} isPendingAddAbsensi={isPendingAddAbsensi} setValue={setValue} />
                         {(data !== undefined)&&(data!==null)?
                             data?.data?.length<1?
                                 (
@@ -72,28 +75,29 @@ const navbar = useRef<HTMLDivElement>(null)
                                 )
                                 :
                                 data?.data?.map((item:IAbsen)=>{
+
+                                    const hari =  format(new Date(item.date),"EEEE",{locale:id}) as string
                                     return(
                                         <div 
                                         key={item._id} 
                                         className={cn(
-                                            "group w-[90%] relative px-4 hover:bg-primary slideRight transition-all text-lg flex items-center justify-between gap-2 h-12 rounded-2xl",
+                                            "group w-[90%] relative px-4 hover:bg-primary slideRight transition-all text-sm flex items-center justify-between gap-2 h-12 rounded-2xl",
                                             {"bg-primary": absenId === item._id}
                                         )}
                                         >
-                                        <GoDotFill className="shrink-0" />
-
-                                        {/* Wrapper Link yang diam (overflow-hidden) */}
+                                        <div className="flex items-center gap-2">
+                                             <GoDotFill className="" />
                                         <a 
-                                            href={`/category/${id}/${item._id}`} 
+                                            href={`/category/${categoryId}/${item._id}`} 
                                             className="relative overflow-hidden flex-1 flex items-center h-full mx-2"
                                         >
-                                            {/* Inner Div yang bergerak (animate-marquee) */}
-                                            <div className={cn("group-hover-marquee flex gap-4")}>
-                                                <strong className="whitespace-nowrap">{`${new Date(item.date).toLocaleDateString('id')}`}</strong>
-                                                {/* Duplikasi teks agar tidak putus saat berputar */}
+                                            <div className={cn("flex gap-4")}>
+                                                <strong className="md:text-md text-sm overflow-hidden text-nowrap lg:text-md"> {hari.substring(0,3)} {`${new Date(item.date).toLocaleDateString('id')}`}</strong>
                                             </div>
                                         </a>
 
+                                        </div>
+                                       
                                         <button 
                                             onClick={() => {
                                             setKategoryId(item._id)

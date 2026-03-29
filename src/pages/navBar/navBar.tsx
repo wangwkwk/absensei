@@ -74,9 +74,10 @@ const navbar = useRef<HTMLDivElement>(null)
           },[open])
 
     return(
-        <div className="min-h-screen w-full">
-            <button className="fixed top-0 left-0 p-5 z-10" onClick={()=>setOpen(true)}>
-                <LuMenu size={50} />
+        <div className="min-h-screen w-full relative">
+            <button className="absolute flex top-0 items-end gap-2 left-0 p-4 z-10" onClick={()=>setOpen(true)}>
+                <LuMenu size={40} />
+                <strong className="text-secondary font-sans text-3xl">Absensei</strong>
             </button>
             <div className="w-full overflow-hidden relative">
                 <div ref={navbar} className={cn(`lg:w-1/5 py-5 w-80 bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all`,{"-translate-x-80":open===false})}>
@@ -160,7 +161,7 @@ const navbar = useRef<HTMLDivElement>(null)
                                             className="relative overflow-hidden flex-1 flex items-center h-full max-w-[90%] mx-2"
                                         >
                                             {/* Inner Div yang bergerak (animate-marquee) */}
-                                            <div className={cn("group-hover-marquee flex gap-4",{"animate-marquee":item?.name?.length>8})}>
+                                            <div className={cn("lg:group-hover-marquee flex gap-4",{"lg:animate-marquee animate-marquee-auto":item?.name?.length>8})}>
                                                 <strong className="whitespace-nowrap">{item?.name}</strong>
                                                 {/* Duplikasi teks agar tidak putus saat berputar */}
                                                 <strong className={cn("whitespace-nowrap",{"hidden":item.name?.length<=8})}>{item.name}</strong>

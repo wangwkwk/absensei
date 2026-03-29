@@ -44,7 +44,6 @@ return{
     data:dataAbsen,
     deletePemain,
     isPendingDeletePemain,
-    refetchAbsen,
     isFetchingAbsen,
 
     handleGender,

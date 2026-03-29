@@ -6,6 +6,7 @@ import {useMutation} from "@tanstack/react-query"
 import instance from "../../../components/axios/instance"
 import { toast } from "react-toastify"
 import {z} from "zod"
+import { useNavigate } from "react-router"
 
 
 // schema dari data yang ingin digunakan atau diminta
@@ -29,7 +30,9 @@ const useRegister = () =>{
         password:false,
         confirmPass: false
     })
-    
+   
+    const navigate = useNavigate()
+
     // fungsi menampilkan password atau tidak
     const handleVisiblePassword = (key: "password"| "confirmPass")=> {
         setVisiblePassword({
@@ -56,7 +59,7 @@ const useRegister = () =>{
         onSuccess: ()=>{
             reset()
             toast.success("Register Success")
-            window.location.href="/auth/register/success"
+            navigate('/auth/success')
         }
     })
 

@@ -7,15 +7,14 @@ import {format} from "date-fns"
 import {id} from "date-fns/locale"
 import instance from "../../../components/axios/instance"
 import { cn } from "../../../components/libs/cn"
+import { useParams } from "react-router"
 
 interface Props{
-    refetchNavbar:()=>void
     data:any;
     deletePemain:(id:string)=>void;
     isPendingDeletePemain:boolean;
     isFetchingAbsen:boolean;
-    refetchAbsen:()=>void;
-    
+        
     handleGender:(e:any)=>void;
     currentGender:string
     GENDER_LIST:{key:string,label:string}[]
@@ -23,9 +22,7 @@ interface Props{
 
 const Absen = (props:Props) =>{
 const {
-    refetchNavbar,
     data,
-    refetchAbsen,
     deletePemain,
     isPendingDeletePemain,
     isFetchingAbsen,
@@ -36,7 +33,7 @@ const {
 
 } = props
 
-
+const {id:CategoryId} = useParams()
 const [pemainId, setPemainId] = useState<string|undefined>()
 const [width, setWidth] = useState<number>(0)
 
@@ -57,7 +54,7 @@ const topContent = useMemo(()=>{
                 <Button color="secondary" size={width<=1024?"md":"lg"} className="" 
                 onPress={()=>{
                     instance.
-                    get("/absen/excel",{responseType:"blob"}). //responseType artinya menentukan hasil res yang akan diterima dari backend, karena akan menerima file maka dipilih "blob"
+                    get(`/absen/${CategoryId}/excel`,{responseType:"blob"}). //responseType artinya menentukan hasil res yang akan diterima dari backend, karena akan menerima file maka dipilih "blob"
                     //.then menangani hasil dari instance.get() tadi 
                     then (res=>{ //res berarti response yang diterima dari backend
                         const url = window.URL.createObjectURL(new Blob([res.data])); //membuat url sementara yang menampung data yang diterima dalam hal ini file excel
@@ -99,7 +96,6 @@ const bottomContent = useMemo(()=>{
         return data.data.data.data.filter((item:any)=>item.gender===currentGender)
     },[data,currentGender])
 
-console.log(data?.data.data)
 
 if(!!data){
     return(
@@ -175,9 +171,6 @@ if(!!data){
                 </Table>
             <AddAbsenModal
             {...addAbsenModal}
-            refetchAbsen=
-            {refetchAbsen}
-            refetchNavbar={refetchNavbar}
             />
         </Card>
     )

@@ -19,7 +19,7 @@ let deferredPrompt: BeforeInstallPromptEvent | null = null;
 window.addEventListener('beforeinstallprompt', (e: Event) => {
   // Kita cast 'e' ke tipe kustom kita
   const installEvent = e as BeforeInstallPromptEvent;
-  
+
   // Mencegah banner bawaan muncul otomatis
   installEvent.preventDefault();
   
