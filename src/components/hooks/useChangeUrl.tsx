@@ -8,6 +8,7 @@ export const GENDER_LIST = [
 const useChangeUrl = () =>{
     // mengganti userouter menjadi useSearchParams mengganti router.query menjadi searchParams.get('key)
     const [searchParams, setSearchParams] = useSearchParams()
+    const currentSearching = searchParams.get("searching")||""
     const currentGender = searchParams.get("gender")||"";
     const currentLimit = searchParams.get("limit")||"10";
     const currentPage = searchParams.get("page")||"1";
@@ -33,6 +34,11 @@ const useChangeUrl = () =>{
         updateParams({gender})
     }
 
+    const handleSearching = (e:ChangeEvent<HTMLInputElement>)=>{
+        const searching = e.target.value
+        updateParams({searching})
+    }
+
     useEffect(()=>{
         const params = new URLSearchParams(searchParams)
         let changed = false
@@ -53,10 +59,12 @@ const useChangeUrl = () =>{
         currentGender,
         currentLimit,
         currentPage,
+        currentSearching,
         handleGender,
         handleLimit,
         handlePage,
-        GENDER_LIST
+        handleSearching,
+        GENDER_LIST,
     }
 }
 

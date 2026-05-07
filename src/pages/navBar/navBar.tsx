@@ -80,7 +80,7 @@ const navbar = useRef<HTMLDivElement>(null)
                 <strong className="text-secondary font-sans text-3xl">Absensei</strong>
             </button>
             <div className="w-full overflow-hidden relative">
-                <div ref={navbar} className={cn(`lg:w-1/5 py-5 w-80 bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all`,{"-translate-x-80":open===false})}>
+                <div ref={navbar} className={cn(`lg:w-1/5 py-5 w-64 bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all`,{"-translate-x-80":open===false})}>
                     <strong className="text-xl mb-2 border-font w-full h-fit flex justify-center"><a href={`/`}>Kategori Absensi</a></strong>
                     <div className="w-full text-sm lg:text-medium h-full flex-col flex px-5 justify-start  items-start text-shadow-2xs gap-1">
                         <div className={cn("flex p-2 group w-[90%] items-center justify-center has-[:hover]:bg-primary hover:bg-primary has-[:hover]:cursor-pointer slideRight transition-all rounded-xl",{"bg-primary w-[95%]":create})}>

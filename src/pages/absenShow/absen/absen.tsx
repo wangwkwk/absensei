@@ -1,21 +1,20 @@
-import { Button, Card, Chip, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@heroui/react"
-import { type IAbsenAllRecord, type tanggalList, } from "../../../components/type"
+import { Button, Chip, Input, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import { type IAbsenAllRecord, type IAbsenRecord, type tanggalList, } from "../../../components/type"
 import { useEffect, useMemo, useState } from "react"
-import AddAbsenModal from "./addAbsenModal/addAbsenModal"
-import { FaTrash } from "react-icons/fa6"
 import {format} from "date-fns"
 import {id} from "date-fns/locale"
 import instance from "../../../components/axios/instance"
 import { cn } from "../../../components/libs/cn"
 import { useParams } from "react-router"
+import { search } from "../../../components/any/search"
 
 interface Props{
     data:any;
-    deletePemain:(id:string)=>void;
-    isPendingDeletePemain:boolean;
     isFetchingAbsen:boolean;
         
     handleGender:(e:any)=>void;
+    handleSearching:any
+    currentSearching:string
     currentGender:string
     GENDER_LIST:{key:string,label:string}[]
 }
@@ -23,10 +22,10 @@ interface Props{
 const Absen = (props:Props) =>{
 const {
     data,
-    deletePemain,
-    isPendingDeletePemain,
     isFetchingAbsen,
-    
+    currentSearching,
+    handleSearching,
+
     handleGender,
     currentGender,
     GENDER_LIST,
@@ -34,7 +33,6 @@ const {
 } = props
 
 const {id:CategoryId} = useParams()
-const [pemainId, setPemainId] = useState<string|undefined>()
 const [width, setWidth] = useState<number>(0)
 
 useEffect(()=>{
@@ -45,12 +43,28 @@ useEffect(()=>{
     return () => window.removeEventListener("resize", handleResize);
 },[])
 
-const addAbsenModal = useDisclosure()
 
 const topContent = useMemo(()=>{
         return(
-            <div className="flex lg:flex-row text-medium justify-start items-start  gap-4 lg:items-center">
-                <Button color="secondary" size={width<=1024?"md":"lg"} className="" onPress={addAbsenModal.onOpen}><strong>Buat absensi</strong></Button>
+            <div className="flex lg:flex-row px-3 text-medium justify-between items-start  gap-4 lg:items-center">
+                <div className="flex w-fit">
+                    <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" items={GENDER_LIST} selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
+                    {(list)=>(
+                        <SelectItem className="w-fit" key={list.key}>
+                            {list.label}
+                        </SelectItem>
+                    )}
+                    </Select>
+
+                    <Input
+                            onChange={handleSearching}
+                            className="w-fit"
+                            variant="underlined"
+                            label="Cari"
+                            color="secondary"
+                            />
+                </div>
+
                 <Button color="secondary" size={width<=1024?"md":"lg"} className="" 
                 onPress={()=>{
                     instance.
@@ -68,111 +82,87 @@ const topContent = useMemo(()=>{
 
                     })
                     
-                    }}><strong>Download</strong></Button>
+                    }}><strong>Download</strong>
+                    </Button>
+                
             </div>
         )
-    },[])
-
-const bottomContent = useMemo(()=>{
-    return(
-        <div className="w-full flex gap-4">
-            <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" items={GENDER_LIST} selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
-            {(list)=>(
-                <SelectItem className="w-fit" key={list.key}>
-                    {list.label}
-                </SelectItem>
-            )}
-            </Select>
-
-
-        </div>
-    )
-},[currentGender, handleGender])
+    },[currentGender, handleGender])
 
 
     const dataAbsen = useMemo(()=>{
-        if(data === undefined|| data === null) return []
-        if(currentGender===""||currentGender===undefined) return data.data.data.data
-        return data.data.data.data.filter((item:any)=>item.gender===currentGender)
-    },[data,currentGender])
+        let dataFiltered = []
+        if(data === undefined|| data === null) {dataFiltered = []}
+        else if(currentGender==="") {dataFiltered = data.data.data.data}
+        else {
+            dataFiltered = data.data.data.data.filter((item:IAbsenRecord)=>item.gender === currentGender)
+        }
+        return search(dataFiltered,currentSearching)
+    },[data,currentGender,currentSearching])
 
 
 if(!!data){
     return(
-        <Card className=" w-full h-full overflow-scroll scrollbar-hide">
-                <Table
-                aria-label="Tabel absensi"
-                className="shadow-md rounded-2xl p-4 w-full"
-                isCompact
-                isHeaderSticky
-                topContent={topContent}
-                bottomContent={bottomContent}
-                topContentPlacement="outside"
-                bottomContentPlacement="outside"
-                classNames={{
-                    base:'max-w-full',
-                    wrapper:cn({'overflow-x-hidden':isFetchingAbsen})
-                }}
+        <div className=" w-full h-full overflow-scroll scrollbar-hide">
+            <h1 className="w-full h-fit pl-7 pt-2 ">
+                <strong className="text-3xl text-secondary text-shadow-2xs">
+                    Rekap Absensi
+                </strong>
+            </h1>
+            <Table
+            aria-label="Tabel absensi"
+            className="shadow-md rounded-2xl px-4 pb-4 pt-2 w-full"
+            isCompact
+            isHeaderSticky
+            topContent={topContent}
+            topContentPlacement="outside"
+            bottomContentPlacement="outside"
+            classNames={{
+                base:'max-w-full',
+                wrapper:cn({'overflow-x-hidden':isFetchingAbsen})
+            }}
+            >
+                <TableHeader>
+                    <TableColumn aria-label="name" key="name">Nama</TableColumn>
+                    <TableColumn aria-label="nim" key="nim">Nim</TableColumn>
+                    <TableColumn aria-label="gender" key="gender">Gender</TableColumn>
+                    {!!data && data?.data.data.tanggalList.map((t:tanggalList) => {
+                        const hari = format(new Date(t.date),"EEEE",{locale:id})
+                        return(
+                        <TableColumn className="text-center" key={t.index}>
+                        {t.index}
+                        <div className="text-xs text-gray-400">{hari}</div>
+                        </TableColumn>
+                    )})}
+                </TableHeader>
+                <TableBody
+                className="overflow-auto"
+                isLoading={isFetchingAbsen}
+                loadingContent={
+                    <div className="flex z-10 h-full w-full items-center justify-center bg-foreground-700/30 backdrop-blur-md">
+                        <Spinner color="secondary"/>
+                    </div>
+                    }
                 >
-                    <TableHeader>
-                        <TableColumn aria-label="hapus" key="hapus">Hapus</TableColumn>
-                        <TableColumn aria-label="name" key="name">Nama</TableColumn>
-                        <TableColumn aria-label="gender" key="gender">Gender</TableColumn>
-                        {!!data && data?.data.data.tanggalList.map((t:tanggalList) => {
-                            const hari = format(new Date(t.date),"EEEE",{locale:id})
-                            return(
-                            <TableColumn className="text-center" key={t.index}>
-                            {t.index}
-                            <div className="text-xs text-gray-400">{hari}</div>
-                            </TableColumn>
-                        )})}
-                    </TableHeader>
-                    <TableBody
-                    className="overflow-auto"
-                    isLoading={isFetchingAbsen}
-                    loadingContent={
-                        <div className="flex z-10 h-full w-full items-center justify-center bg-foreground-700/30 backdrop-blur-md">
-                            <Spinner color="secondary"/>
-                        </div>
-                        }
-                    >
-                    {dataAbsen?.map((pemain: IAbsenAllRecord) => (
-                        <TableRow>
-                        <TableCell key={pemain.pemainId} aria-label="hapus" className="w-fit text-center"> 
-                            <Button 
-                            color="secondary" 
-                            isDisabled={pemain.pemainId===pemainId}
-                            onPress={
-                                ()=>{
-                                    setPemainId(pemain.pemainId)
-                                    deletePemain(pemain.pemainId)
-                                }
-                                } 
-                                size={width<=1024?"sm":"lg"}
-                            className="w-fit p-0 m-0 flex items-center justify-center"
-                            >
-                                {isPendingDeletePemain&&pemain.pemainId===pemainId? <Spinner color="white" size="sm"/>:<FaTrash/>}
-                            </Button>
+                {dataAbsen?.map((pemain: IAbsenAllRecord) => (
+                    <TableRow>
+                    <TableCell className="h-10 font-semibold" aria-label="name" key="name">{pemain.name}</TableCell>
+                    <TableCell className="font-semibold" aria-label="nim" key="nim">{pemain.nim}</TableCell>
+                    <TableCell aria-label="gender" key="gender">{pemain.gender}</TableCell>
+                    {data.data.data.tanggalList.map((t:any) => (
+                        <TableCell aria-label={`absen${t.index}`} key={t.index} className="text-center">
+                        {pemain.kehadiran[t.index] === true ? (
+                            <Chip color="success" size="sm" variant="flat">✔</Chip>
+                        ) : (
+                            <Chip color="danger" size="sm" variant="flat">✘</Chip>
+                        )}
                         </TableCell>
-                        <TableCell className="font-semibold" aria-label="name" key="name">{pemain.name}</TableCell>
-                        <TableCell aria-label="gender" key="gender">{pemain.gender}</TableCell>
-                        {data.data.data.tanggalList.map((t:any) => (
-                            <TableCell aria-label={`absen${t.index}`} key={t.index} className="text-center">
-                            {pemain.kehadiran[t.index] === true ? (
-                                <Chip color="success" size="sm" variant="flat">✔</Chip>
-                            ) : (
-                                <Chip color="danger" size="sm" variant="flat">✘</Chip>
-                            )}
-                            </TableCell>
-                        ))}
-                        </TableRow>
                     ))}
-                    </TableBody>
-                </Table>
-            <AddAbsenModal
-            {...addAbsenModal}
-            />
-        </Card>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+        </div>
     )
 }else{
     return(

@@ -44,7 +44,7 @@ export interface ICategory{
 interface IAbsenRecord {
 pemainId:string,
 name:string,
-kelas:string,
+nim?:string,
 gender:string,
 status:boolean
 }
@@ -78,7 +78,7 @@ interface IAllAbsen{
     data:{
         pemainId:string,
         name:string,
-        kelas:string,
+        nim?:string,
         kehadiran:{}
     },
     tanggalList:{
@@ -112,6 +112,7 @@ export type {IPagination, IMeta, IData}
 interface IPemain {
     _id?:string,
     name?:string,
+    nim?:string,
     gender?:string;
     categoryId?:string;
 }

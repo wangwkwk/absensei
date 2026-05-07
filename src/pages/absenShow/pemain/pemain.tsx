@@ -1,9 +1,10 @@
-import { Button, Card, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@heroui/react"
+import { Button, Input, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@heroui/react"
 import usePemainTab from "./usePemainTab"
 import { type IPemain } from "../../../components/type"
 import { useEffect, useMemo, useState } from "react"
 import { FaTrash } from "react-icons/fa6"
 import AddPemainModal from "./addPemainModal/addPemainModal"
+import { search } from "../../../components/any/search"
 
 
 const PemainTab = () =>{
@@ -16,6 +17,8 @@ const PemainTab = () =>{
         GENDER_LIST,
         currentGender,
         handleGender,
+        currentSearching,
+        handleSearching
     } = usePemainTab()
     const [pemainId, setPemainId] = useState<string|undefined>()
     const [width, setWidth] = useState<number>(0)
@@ -29,43 +32,61 @@ const PemainTab = () =>{
         return () => window.removeEventListener("resize", handleResize);
     },[])
 
+    const filteredData  = useMemo(()=>{
+        let dataFiltered = []
+        if(dataPemain===null||dataPemain===undefined) dataFiltered = [];
+        else if(currentGender === "") dataFiltered = dataPemain!!.data.data;
+        else dataFiltered = dataPemain!!.data.data.filter((item:IPemain)=>item.gender===currentGender)
+        return search(dataFiltered, currentSearching)
+    },[dataPemain,currentGender, currentSearching])
+
     const topContent = useMemo(()=>{
         return(
-            <div className="lg:flex-row text-medium justify-start items-start  gap-4 lg:items-center">
-                <Button color="secondary" size={width<=1024?"md":"lg"} className="" onPress={addPemainModal.onOpen}><strong>Daftar Pemain</strong></Button>
+            <div className="flex text-medium justify-between w-full px-3 items-start  gap-4 lg:items-center">
+                <div className="flex">
+                    <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" items={GENDER_LIST} selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
+                        {(list)=>(
+                            <SelectItem className="w-fit" key={list.key}>
+                                {list.label}
+                            </SelectItem>
+                        )}
+                    </Select>
+
+                    <Input
+                        onChange={handleSearching}
+                        className="w-fit"
+                        variant="underlined"
+                        label="Cari"
+                        color="secondary"
+                        />
+                </div>
+
+            <Button color="secondary" size={width<=1024?"md":"lg"} className="" onPress={addPemainModal.onOpen}><strong>Masukkan Pelajar</strong></Button>
+                
             </div>
         )
-    },[])
-    const bottomContent = useMemo(()=>{
+    },[currentGender, handleGender])
     return(
-        <div className="w-full flex gap-4">
-            <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" items={GENDER_LIST} selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
-            {(list)=>(
-                <SelectItem className="w-fit" key={list.key}>
-                    {list.label}
-                </SelectItem>
-            )}
-            </Select>
-
-        </div>
-    )
-},[currentGender, handleGender])    
-    return(
-        <Card className=" w-full h-full max-w-full overflow-scroll scrollbar-hide">
+        <div className=" w-full h-full max-w-full items-center justify-center flex flex-col overflow-scroll scrollbar-hide">
+            <h1 className="w-full h-fit pl-7 pt-2 ">
+                <strong className="text-3xl text-secondary text-shadow-2xs">
+                    Seluruh Mahasiswa
+                </strong>
+            </h1>
                 <Table
                 aria-label="Tabel absensi"
                 className="shadow-md rounded-2xl w-full p-4 overflow-scroll scrollbar-hide"
                 isCompact
                 isHeaderSticky
                 topContent={topContent}
-                bottomContent={bottomContent}
                 bottomContentPlacement="outside"
                 topContentPlacement="outside"
                 >
                     <TableHeader>
-                        <TableColumn key="hapus">Hapus</TableColumn>
                         <TableColumn key="name">Nama</TableColumn>
+                        <TableColumn key="name">Nim</TableColumn>
                         <TableColumn key="gender">Gender</TableColumn>
+                        <TableColumn key="hapus">Hapus</TableColumn>
                     </TableHeader>
                     <TableBody
                     className="overflow-auto"
@@ -76,8 +97,11 @@ const PemainTab = () =>{
                         </div>
                     }
                     >
-                    {dataPemain?.data?.data?.map((pemain: IPemain) => (
+                    {filteredData?.map((pemain: IPemain) => (
                         <TableRow>
+                        <TableCell className="font-semibold" key="name">{pemain.name}</TableCell>
+                        <TableCell className="font-semibold" key="name">{pemain.nim}</TableCell>
+                        <TableCell key="gender">{pemain.gender}</TableCell>
                         <TableCell key={pemain._id} className="w-fit text-center"> 
                             <Button 
                             color="secondary" 
@@ -94,8 +118,6 @@ const PemainTab = () =>{
                                 {isPendingDeletePemain&&pemain._id===pemainId? <Spinner color="white" size="sm"/>:<FaTrash/>}
                             </Button>
                         </TableCell>
-                        <TableCell className="font-semibold" key="name">{pemain.name}</TableCell>
-                        <TableCell key="gender">{pemain.gender}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>
@@ -104,7 +126,7 @@ const PemainTab = () =>{
             {...addPemainModal}
             refetchAbsen={refetchPemain}
             />
-        </Card>
+        </div>
     )
 }
 

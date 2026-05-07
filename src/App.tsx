@@ -64,7 +64,9 @@ window.addEventListener('appinstalled', () => {
   const user:IUser = JSON.parse(`${localStorage.getItem('user')}`)
   return (
    <div className="p-5 flex flex-col">
-      <strong className="font-bold text-2xl mb-10">Halo {user.username} !!</strong>
+      <h1 className="font-bold text-4xl mb-8">
+        <strong >Halo {user.username} !!</strong>
+      </h1>
       <div className="flex-col">
         <p className="font-semibold text-xl mb-3 text-secondary text-shadow">Selamat datang di Absensei</p>
         <p>Sebuah platform untuk melakukan absensi berbasis website gratis,</p>

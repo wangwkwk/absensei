@@ -1,16 +1,17 @@
 import useChangeUrl from "../../../components/hooks/useChangeUrl"
 import instance from "../../../components/axios/instance"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { toast } from "react-toastify"
+import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router"
 
 const useAbsen = ()=>{
 const {id:categoryId} = useParams<{id:string}>()
 const {handleGender,
     currentGender,
+    currentSearching,
+    handleSearching,
     GENDER_LIST} = useChangeUrl()
 
-const {data:dataAbsen, refetch:refetchAbsen, isFetching:isFetchingAbsen} =useQuery({
+const {data:dataAbsen, isFetching:isFetchingAbsen} =useQuery({
     queryKey:["ABSEN"],
     queryFn:()=>handleGetAbsen(),
 })
@@ -21,32 +22,14 @@ const handleGetAbsen = async () => {
 }
 
 
-const handleDeletePemain = async (id:string)=>{
-    const result = await instance.delete(`/pemain/${id}`)
-    return result
-}
-
-const {mutate:mutateDeletePemain, isPending:isPendingDeletePemain} = useMutation({
-    mutationFn:handleDeletePemain,
-    onError:(error:any)=>{
-        toast.error(error.response.data.meta.message)
-    },
-    onSuccess:()=>{
-        toast.success("sukses menghapus pemain")
-        refetchAbsen()
-    }
-})
-
-const deletePemain = (id:string) =>mutateDeletePemain(id)
-
 
 return{
     data:dataAbsen,
-    deletePemain,
-    isPendingDeletePemain,
     isFetchingAbsen,
 
     handleGender,
+    handleSearching,
+    currentSearching,
     currentGender,
     GENDER_LIST
 }

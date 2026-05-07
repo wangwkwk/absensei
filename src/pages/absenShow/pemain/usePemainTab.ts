@@ -10,25 +10,23 @@ const usePemainTab = () =>{
         GENDER_LIST,
         currentGender,
         handleGender,
+        handleSearching,
+        currentSearching
     } = useChangeUrl()
 
     const {id:categoryId} = useParams<{id:string}>()
 
         const {data:dataPemain, refetch:refetchPemain, isLoading:isLoadPemain, isFetching:isFetchingPemain} = useQuery({
-        queryKey:[`PEMAIN_${categoryId}_GENDER_${currentGender}`],
+        queryKey:[`PEMAIN_${categoryId}`],
         queryFn:()=>getPemain(),
         enabled:categoryId!==undefined && categoryId!==""
     })
 
 
-
-
     const getPemain = async () => {
-        const params = `?gender=${currentGender===undefined?"":currentGender}`
-        const result = await instance.get(`/pemain/${categoryId}${params}`)
+        const result = await instance.get(`/pemain/${categoryId}`)
         return result
     }
-
 
     const handleDeletePemain = async (id:string)=>{
         const result = await instance.delete(`/pemain/${id}`)
@@ -59,6 +57,8 @@ const deletePemain = (id:string) =>mutateDeletePemain(id)
         GENDER_LIST,
         currentGender,
         handleGender,
+        currentSearching,
+        handleSearching
     }
 }
 export default usePemainTab

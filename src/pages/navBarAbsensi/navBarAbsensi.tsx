@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { LuMenu } from "react-icons/lu";
-import { Spinner } from "@heroui/react"
+import { Spinner, useDisclosure } from "@heroui/react"
 import { FaTrash } from "react-icons/fa6"
 import { cn } from "../../components/libs/cn";
 import { GoDotFill } from "react-icons/go";
@@ -11,12 +11,16 @@ import { Outlet, useParams } from "react-router";
 import useNavbarAbsensi from "./useNavbarAbsensi";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { BsQrCode } from "react-icons/bs";
+import QrModal from "./qrModal/qrModal";
 
 const NavBarAbsensi = () =>{
 const [kategoryId, setKategoryId] = useState<string|undefined>()
+const [idAbsensi, setIdAbsensi] = useState<string>("")
 const [open, setOpen] = useState<boolean>(false)
 const {id:categoryId} = useParams<{id:string}>()
 const {absenId} = useParams<{absenId:string}>()
+const qrModal = useDisclosure()
 
 const {
     data,
@@ -62,7 +66,7 @@ const navbar = useRef<HTMLDivElement>(null)
                 <strong className="text-secondary font-sans text-3xl">Absensei</strong>
             </button>
             <div className="w-full overflow-hidden relative">
-                <div ref={navbar} className={cn("lg:w-1/5 py-5 w-fit bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all",{"-translate-x-80":open===false})}>
+                <div ref={navbar} className={cn("lg:w-1/5 py-5 w-64 bg-secondary h-full fixed flex-col text-white items-center justify-start shadowing flex translate-0 z-10 transition-all",{"-translate-x-80":open===false})}>
                     <strong className="text-xl mb-2 border-font w-full h-fit flex justify-center"><a href={`/category/${categoryId}`}>Daftar Absensi</a></strong>
                     <div className="w-full text-sm lg:text-medium h-10/12 flex-col flex px-5 justify-start  items-start text-shadow-2xs gap-1">
                     <InputNewAbsensi create={create} setCreate={setCreate} control={control} errors={errors} handleAddAbsensi={handleAddAbsensi} handleSubmit={handleSubmit} isPendingAddAbsensi={isPendingAddAbsensi} setValue={setValue} />
@@ -87,17 +91,27 @@ const navbar = useRef<HTMLDivElement>(null)
                                         >
                                         <div className="flex items-center gap-2">
                                              <GoDotFill className="" />
-                                        <a 
-                                            href={`/category/${categoryId}/${item._id}`} 
-                                            className="relative overflow-hidden flex-1 flex items-center h-full mx-2"
-                                        >
-                                            <div className={cn("flex gap-4")}>
-                                                <strong className="md:text-md text-sm overflow-hidden text-nowrap lg:text-md"> {hari.substring(0,3)} {`${new Date(item.date).toLocaleDateString('id')}`}</strong>
-                                            </div>
-                                        </a>
+                                            <a 
+                                                href={`/category/${categoryId}/${item._id}`} 
+                                                className="relative overflow-hidden flex-1 flex items-center h-full mx-2"
+                                            >
+                                                <div className={cn("flex gap-4")}>
+                                                    <strong className="md:text-md text-sm overflow-hidden text-nowrap lg:text-md"> {hari.substring(0,3)} {`${new Date(item.date).toLocaleDateString('id')}`}</strong>
+                                                </div>
+                                            </a>
 
                                         </div>
                                        
+                                        <button 
+                                        onClick={()=>{
+                                            qrModal.onOpen()
+                                            setIdAbsensi(item._id)
+                                        }}
+                                        className="cursor-pointer hover:scale-110"
+                                        >
+                                            <BsQrCode/>
+                                        </button>
+
                                         <button 
                                             onClick={() => {
                                             setKategoryId(item._id)
@@ -146,6 +160,10 @@ const navbar = useRef<HTMLDivElement>(null)
             <div className={cn("lg:w-4/5 lg:p-0 pt-16 absolute w-full max-w-full max-h-screen overflow-scroll scrollbar-hide lg:right-0")}>
             <Outlet/>
             </div>
+            <QrModal 
+            {...qrModal}
+            id={idAbsensi}
+            />
         </div>
 )
 }

@@ -1,20 +1,22 @@
 import { type IAbsen, type IAbsenRecord } from "../../components/type"
 import useEditAbsen from "./useEditAbsen"
-import { Button, Checkbox, Chip, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import { Button, Checkbox, Chip, Input, Select, SelectItem, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { type Key, useMemo } from "react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { GENDER_LIST } from "../../components/hooks/useChangeUrl"
+import { search } from "../../components/any/search"
 
 const EditAbsen = () =>{
     const {
         dataEditAbsen, 
         handleEdit, 
         isPendingEditAbsen,
-        pemainId,
         setPemainId,
         currentGender,
         handleGender,
+        currentSearching,
+        handleSearching,
         handleMany,
         selectedId,
 
@@ -24,22 +26,30 @@ const EditAbsen = () =>{
 
     const DATA_COLUMNS=[
         {"label":"Nama","key":"nama"},
-        {"label":"Kelas","key":"kelas"},
-        {"label":"gender","key":"gender"},
+        {"label":"Nim", "key": "nim"},
         {"label":"Status","key":"status"},
         {"label":"Action","key":"action"}
     ]
-
-        const data  = dataEditAbsen?.data.data.hasil as unknown as IAbsen as any
+    const data  = dataEditAbsen?.data.data.hasil as unknown as IAbsen as any
         
         const rawDate = dataEditAbsen?.data?.data?.date
-        
+
         const filteredData = useMemo(()=>{
-            if(!data) return []
-            if(currentGender === ""|| currentGender===undefined) return data
-            return data.filter((item:IAbsenRecord)=>item.gender===currentGender)
-        },[data, currentGender])
-        
+            if(!data) {return []}
+            let dataFiltered:any = []
+            if(currentGender==="") {
+                dataFiltered = data
+            }
+            else if(currentGender!==""){
+                const filtered = data.filter((item:IAbsenRecord)=>item.gender===currentGender)
+                dataFiltered = filtered
+            }
+            
+            return search(dataFiltered, currentSearching) 
+            
+        },[data, currentGender, currentSearching])
+
+
         const hari = useMemo(()=>{
             if(!rawDate) return ""
             const day = new Date(rawDate)
@@ -49,37 +59,43 @@ const EditAbsen = () =>{
             if(!rawDate) return ""
             const date = new Date(rawDate)
             // isNan(date.getTime()) adalah pengecekan apakah format date sudah dikenali oleh javascript
-            return isNaN(date.getTime())?"":format(date,"dd-mm-yyyy",{locale:id})
+            return isNaN(date.getTime())?"":format(date,"dd MMMM yyyy",{locale:id})
         },[rawDate])
         
+
         const topContent =useMemo(()=>{
             return(
                 <div className="w-full justify-start">
-                    <strong>
-                        Absensi hari {hari}, {tanggal}
-                    </strong>
+                    <h1>
+                        <strong className="text-2xl">
+                            Absensi hari {hari}, {tanggal}
+                        </strong>
+                    </h1>
+                     <div className="w-full flex items-center">
+                        <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
+                        {GENDER_LIST.map((gender)=>(
+                            <SelectItem className="w-fit" key={gender.key}>
+                                {gender.label}
+                            </SelectItem>
+                        ))}
+                        </Select>
+                        <Input
+                        onChange={handleSearching}
+                        className="w-fit"
+                        variant="underlined"
+                        label="Cari"
+                        color="secondary"
+                        />
+                        <div className="flex w-8/12 justify-end">
+                            <Button isDisabled={selectedId.length<1||isPendingMany} className="w-fit h-9" color="secondary" onPress={handleSendMany}>
+                                Kirim
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             )
-        },[hari,tanggal])
+        },[hari,tanggal, currentGender, handleGender, handleSendMany, isPendingMany, selectedId])
 
-        const bottomContent = useMemo(()=>{
-            return(
-                <div className="w-full flex relative items-center gap-4">
-                    <Select label={"Gender"} color="secondary" variant="underlined" className="w-24" aria-label="gender" selectedKeys={[`${currentGender}`]} selectionMode="single" onChange={handleGender}>
-                    {GENDER_LIST.map((gender)=>(
-                        <SelectItem className="w-fit" key={gender.key}>
-                            {gender.label}
-                        </SelectItem>
-                    ))}
-                    </Select>
-
-                    <Button isDisabled={selectedId.length<1||isPendingMany} className="absolute w-fit h-9 right-2/6" color="secondary" onPress={handleSendMany}>
-                        Kirim
-                    </Button>
-                </div>
-            )
-        },[currentGender, handleGender, handleSendMany, isPendingMany, selectedId])
-    
     if(!!dataEditAbsen){
             // titleChanger(`${format(new Date(dataEditAbsen.data.data.date),"EEEE",{locale:id})}, ${format(new Date(dataEditAbsen.data.data.date),"dd-MM-yyyy",{locale:id})}`)
 
@@ -91,7 +107,6 @@ const EditAbsen = () =>{
                 className="shadow-md rounded-2xl overflow-auto"
                 isCompact
                 isHeaderSticky
-                bottomContent={bottomContent}
                 topContent={topContent}
                 >
                     <TableHeader columns={DATA_COLUMNS}>
@@ -109,24 +124,30 @@ const EditAbsen = () =>{
                         {filteredData.map((item:IAbsenRecord)=>{
                             return(
                             <TableRow key={item.pemainId as Key} >
-                                <TableCell key={'name'}>
+                                <TableCell className="h-10" key={'name'}>
                                     {item.name}
                                 </TableCell>
-                                <TableCell key={'kelas'}>
-                                    {item.kelas}
-                                </TableCell>
-                                <TableCell key={'gender'}>
-                                    {item.gender}
-                                </TableCell>
+                                <TableCell key={'nim'}>
+                                    {item.nim}
+                                </TableCell>                                
                                 <TableCell key={'status'}>
-                                    {item.status===true?(
-                            <Chip    color="success" size="sm" variant="flat">✔</Chip>
-                        ) : (
-                            <Chip color="danger" size="sm" variant="flat">✘</Chip>
-                        )}
+                            <Chip 
+                            color={item.status===true?"success":"danger"} 
+                            size="md" 
+                            variant="flat"
+                            className="cursor-pointer hover:scale-150 transition-all"
+                            onClick={
+                                ()=>{
+                                    setPemainId(item.pemainId)
+                                    handleEdit(!item.status)
+                                }}
+                            isDisabled={selectedId.length>=1||isPendingEditAbsen||isPendingMany}
+                            >{item.status===true?"✔":"✘"}</Chip>
+
                                 </TableCell>
                                 <TableCell key={'action'} className="gap-10 w-full relative flex items-center justify-baseline ">
                                     <Checkbox 
+                                    disableAnimation
                                     isSelected={
                                         selectedId.some((object)=>object.id === item.pemainId)
                                     } 
@@ -135,23 +156,6 @@ const EditAbsen = () =>{
                                     } 
                                     isDisabled={item.status}
                                     />
-                                    
-                                    <Button 
-                                        color={item.status===false?"secondary":"danger"}
-                                        onPress={()=>{
-                                            setPemainId(item.pemainId)
-                                            handleEdit(!item.status)
-                                        }}
-                                        isDisabled={selectedId.length>=1||isPendingEditAbsen||isPendingMany}
-                                        >
-                                            {isPendingEditAbsen === true&&pemainId===item.pemainId?(
-                                                <Spinner color="white" size="sm"/>
-                                            ):(
-                                                <strong>
-                                                    {item.status===false?"Hadir":"Tidak Hadir"}
-                                                </strong>
-                                            )}
-                                        </Button>
     
                                 </TableCell>
                             </TableRow>

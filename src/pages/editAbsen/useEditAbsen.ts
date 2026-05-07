@@ -25,12 +25,14 @@ const useEditAbsen = () =>{
 
     const {
     currentGender,
+    currentSearching,
     handleGender,
+    handleSearching
+    
 } = useChangeUrl()
 
     const getAbsen = async () =>{       
-        const params = `?gender=${currentGender}`
-        const result = await instance.get(`/absenById/${absenId}${params}`)
+        const result = await instance.get(`/absenById/${absenId}`)
         return result
     }
 
@@ -91,6 +93,8 @@ const useEditAbsen = () =>{
         setPemainId,
             currentGender,
             handleGender,
+            currentSearching,
+            handleSearching,
         handleMany,
         selectedId,
         
