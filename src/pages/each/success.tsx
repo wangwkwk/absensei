@@ -1,4 +1,3 @@
-import { Button } from "@heroui/react"
 import { titleChanger } from "../../components/libs/pageHead/pageHead"
 
 const Success = () => {
