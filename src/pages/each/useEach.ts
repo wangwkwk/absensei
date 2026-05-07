@@ -27,7 +27,7 @@ const useEach = () =>{
         mutationFn:handleUpdate,
         onError:(error:any)=>toast.error(error.response.data.meta.message),
         onSuccess:()=>{
-            window.location.href = `/each/absen/berhasil`
+            window.location.href = `/forEach/Success`
         }
     })
 

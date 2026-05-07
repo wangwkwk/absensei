@@ -18,11 +18,13 @@ import EditAbsen from './pages/editAbsen/editAbsen.tsx'
 import AuthMiddleware from './AuthMiddleware.tsx'
 import BlockAuthMiddleware from './blockAuthMiddleware.tsx'
 import Each from './pages/each/each.tsx'
+import Success from './pages/each/success.tsx'
 
 
 
 const router =createBrowserRouter([
           {path:'/forEach/:id',element:<Each/>},
+          {path:"/forEach/Success", element:<Success/>},
           {element:<AuthMiddleware/>,
             children:[
               {
