@@ -19,32 +19,40 @@ import AuthMiddleware from './AuthMiddleware.tsx'
 import BlockAuthMiddleware from './blockAuthMiddleware.tsx'
 import Each from './pages/each/each.tsx'
 import Success from './pages/each/success.tsx'
+import Activation, { activationLoader } from './pages/Auth/activation/activation.tsx'
+import { ErrorBoundary } from './error.tsx'
 
 
 
 const router =createBrowserRouter([
-          {path:'/forEach/:id',element:<Each/>},
-          {path:"/forEach/Success", element:<Success/>},
+          {path:'/forEach/:id',element:<Each/>, errorElement:<ErrorBoundary/>},
+          {path:"/forEach/Success", element:<Success/>, errorElement:< ErrorBoundary />},
+          {path:'/auth/activation', element:<Activation/>, errorElement:< ErrorBoundary />, loader:activationLoader},
           {element:<AuthMiddleware/>,
             children:[
               {
               path: '/', element: <NavBar />,
-              children:[{ path: '/', element: <App /> }]
+              children:[{ path: '/', element: <App /> }],
+              errorElement:< ErrorBoundary />
               },
               {
                 path:'/category/:id',element:<NavBarAbsensi/>,
                 children:[
-                  {index:true,element:<AbsenShow/>},
-                  {path:'/category/:id/:absenId',element:<EditAbsen/>}
-          ]}
-            ]
+                  {index:true,element:<AbsenShow/>, errorElement:< ErrorBoundary />},
+                  {path:'/category/:id/:absenId',element:<EditAbsen/>, errorElement:< ErrorBoundary />}
+                  ],
+                errorElement:< ErrorBoundary />
+                }
+            ], 
+            errorElement:< ErrorBoundary />
           },
           {element:<BlockAuthMiddleware/>,
             children:[
-              {path: '/auth/login', element: <Login/>},
-              {path: '/auth/register', element: <Register/>},
-              {path: '/auth/success', element: <RegisterSuccess/>},
-            ]
+              {path: '/auth/login', element: <Login/>, errorElement:< ErrorBoundary />},
+              {path: '/auth/register', element: <Register/>, errorElement:< ErrorBoundary />},
+              {path: '/auth/success', element: <RegisterSuccess/>, errorElement:< ErrorBoundary />},
+            ],
+            errorElement:< ErrorBoundary />
           }
       ])
 
