@@ -201,7 +201,10 @@ const navbar = useRef<HTMLDivElement>(null)
                         <button className="group" disabled={+currentPage>=data?.pagination?.totalPage} onClick={()=>handlePage(+currentPage+1)}>< IoIosArrowDropright className="group-disabled:text-gray-500 group-hover:cursor-pointer group-hover:animationShakeX" size={25}/></button>
                     </div>
                     )}
-                    <strong onClick={()=>signOut()} className="cursor-pointer hover:animationShakeX">Log Out</strong>
+                    <strong onClick={()=>{
+                        signOut()
+                        window.location.reload()
+                        }} className="cursor-pointer hover:animationShakeX">Log Out</strong>
                 </div>
             </div>
             <div className={cn("lg:w-4/5 lg:p-0 pt-16 absolute w-full max-w-full max-h-screen overflow-scroll scrollbar-hide lg:right-0")}>
