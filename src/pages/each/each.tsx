@@ -50,7 +50,6 @@ const Each = () =>{
         data = dataAbsen?.data.data.hasil
     }
     data = data.filter((item:any)=>item.status === false)
-    console.log(data)
     return(
         <div className="w-full h-fit p-10">
             <h1 className="text-5xl text-secondary text-shadow-2xs mb-16"><strong>Absensei</strong></h1>

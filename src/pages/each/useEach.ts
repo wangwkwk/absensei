@@ -37,9 +37,10 @@ const useEach = () =>{
 
     const handleUpdate = async () =>{ 
         if(location.lat===0||location.lgt===0) throw new Error("Lokasi tidak ditemukan");
-        if(dataAbsen?.data.location!==undefined){
-            const absenLocation = dataAbsen?.data.location
+        if(dataAbsen?.data?.data?.location!==undefined){
+            const absenLocation = dataAbsen?.data?.data?.location
             const jarak = hitungJarak(absenLocation?.lat,absenLocation?.lgt,location.lat,location.lgt)
+            console.log(jarak)
             if(jarak > 100) throw new Error("Anda jauh dari lokasi absensi")
         }
         const res = await instance.put(`/absen/each/${id}`,{pemainId:pemainId})
@@ -49,7 +50,6 @@ const useEach = () =>{
     const {mutate, isPending} = useMutation({
         mutationFn:handleUpdate,
         onError:(error:any)=>{
-            console.log(error)
             if(error?.response?.data.meta.message !== undefined){
                 toast.error(error?.response?.data.meta.message)
             }else{
@@ -57,12 +57,11 @@ const useEach = () =>{
             }
         },
         onSuccess:()=>{
-            window.location.href = `/forEach/Success`
+            // window.location.href = `/forEach/Success`
         }
     })
 
     const submitUpdate = () => mutate()
-    console.log(dataAbsen?.data.location)
     return{
         dataAbsen,
         isFetchingAbsen,
