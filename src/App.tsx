@@ -1,6 +1,7 @@
 import { Button } from "@heroui/react";
 import { titleChanger } from "./components/libs/pageHead/pageHead"
 import type { IUser } from "./components/type"
+import { decrypt } from "./components/any/encrypt";
 
 function App() {
 interface BeforeInstallPromptEvent extends Event {
@@ -61,7 +62,7 @@ window.addEventListener('appinstalled', () => {
 });
 
   titleChanger('Home')
-  const user:IUser = JSON.parse(`${localStorage.getItem('user')}`)
+  const user:IUser = JSON.parse(`${decrypt(localStorage.getItem('user')!)}`)
   return (
    <div className="p-5 flex flex-col">
       <h1 className="font-bold text-4xl mb-8">

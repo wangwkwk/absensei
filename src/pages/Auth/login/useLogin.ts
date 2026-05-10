@@ -37,23 +37,21 @@ const useLogin = () =>{
     
     // fungsi mengirimkan data Iregister ke endPoint
     const loginsService = async (payload: ILogin) =>{
-
-            const result = await instance.post(`${endPoint.auth}/login`,payload)
-            
-            if(result.data?.data){
-                signIn(result.data?.data,null)
-                const {data:user} = await instance.get(`${endPoint.auth}/me`)
-                signIn(result.data?.data,user.data) 
-            }
-
+        
+        const result = await instance.post(`${endPoint.auth}/login`,payload)
+        if(result.data?.data){
+            signIn(result.data?.data,null)
+            const {data:user} = await instance.get(`${endPoint.auth}/me`)
+            signIn(result.data?.data,user.data) 
+        }
             return result
     }
 // fungsi memutasi apa yang akan terjadi ketika registrasi dilakukan
     const {mutate:mutateLogin, isPending:isPendingLogin} = useMutation({
         mutationFn: loginsService,
         onError(error:any){
-            toast.error(error.response.data.meta.message)
-            setError("root",{message:error.message})
+            toast.error(error.response?.data?.meta.message)
+            setError("root",{message:error})
 
         },
         onSuccess: ()=>{

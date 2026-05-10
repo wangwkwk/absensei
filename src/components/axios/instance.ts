@@ -1,4 +1,5 @@
 import axios from "axios";
+import { decrypt } from "../any/encrypt";
 
 
 const instance = axios.create({
@@ -8,7 +9,8 @@ const instance = axios.create({
 instance.interceptors.request.use((config)=>{
     const token = localStorage.getItem('authToken')
     if(token){
-        config.headers.Authorization = `Bearer ${token}`
+        const extendToken = decrypt(token)
+        config.headers.Authorization = `Bearer ${extendToken}`
     }
     return config
 })

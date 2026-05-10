@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { AuthContextType, ISession, IUser } from "../type";
-import { encrypt } from "../any/encrypt";
+import { decrypt, encrypt } from "../any/encrypt";
 
 export const sessionContext =  createContext<AuthContextType|undefined>(undefined)
 
@@ -14,8 +14,9 @@ export const SessionProvider = ({children}:{children:ReactNode}) =>{
         const user = localStorage.getItem('user')
 
         if(token && user){
+            const userExtend = decrypt(user)
             setSession({
-                user: JSON.parse(user),
+                user: JSON.parse(userExtend),
                 status: 'authenticated'
             })
         }else{
@@ -27,7 +28,7 @@ export const SessionProvider = ({children}:{children:ReactNode}) =>{
     },[])
 
     const signIn = (token:string|undefined, user:IUser|undefined) =>{
-        if(token){
+        if(token!==undefined){
             const extendToken = encrypt(token)
             localStorage.setItem('authToken',extendToken)
         }
@@ -36,8 +37,10 @@ export const SessionProvider = ({children}:{children:ReactNode}) =>{
             localStorage.setItem('user',extendUser)
         }
         if((localStorage.getItem('authToken') && localStorage.getItem('user'))!==null||undefined){
+            const extendUser = localStorage.getItem('user')
+            const user = decrypt(extendUser!)
             setSession({
-                user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
+                user: localStorage.getItem('user') ? JSON.parse(user) : null,
                 status: 'authenticated'
             })
         }}
