@@ -16,8 +16,7 @@ import { useParams } from "react-router"
 const addAbsensiSchema = z.object({date:z.custom<DateValue|ZonedDateTime>((value)=>{return value !== undefined},"Masukkan tanggal absensi")})
 
 const useNavbarAbsensi = () =>{
-
-
+const [location, setLocation] = useState<{lat:any,lgt:any}>({lat:null,lgt:null})
 const {control, handleSubmit, formState:{errors}, reset, setValue} = useForm({resolver:zodResolver(addAbsensiSchema)})
 const queryClient = useQueryClient()
 
@@ -63,9 +62,36 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
 
 
     const handleFetchAddAbsensi = async (date:any) =>{
-        
+        navigator.geolocation.getCurrentPosition(
+            (position)=>{
+                setLocation({lat:position.coords.latitude,lgt:position.coords.longitude})
+            },
+            (error)=>{
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        toast.error("Kamu harus mengizinkan akses lokasi untuk absen.");
+                        throw new Error('');
+                    case error.POSITION_UNAVAILABLE:
+                        toast.error("Informasi lokasi tidak tersedia saat ini.");
+                        throw new Error('');
+                    case error.TIMEOUT:
+                        toast.error("Permintaan lokasi melebihi batas waktu (timeout).");
+                        throw new Error('');
+                    default:
+                        toast.error("Terjadi kesalahan yang tidak diketahui.");
+                        throw new Error('');
+                        }
+                    },
+            {
+                enableHighAccuracy:true,
+                timeout:10000,
+                maximumAge:0
+            }
+        )
+        if(location.lat===null||location.lgt===null) throw new Error('Lokasi tidak ada')
         const {data} = await instance.post(`${path.absen}`, {
             date:date as DateValue,
+            location,
             categoryId
         })
         return {data}

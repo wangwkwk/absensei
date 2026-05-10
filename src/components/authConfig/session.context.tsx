@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { AuthContextType, ISession, IUser } from "../type";
+import { encrypt } from "../any/encrypt";
 
 export const sessionContext =  createContext<AuthContextType|undefined>(undefined)
 
@@ -27,10 +28,12 @@ export const SessionProvider = ({children}:{children:ReactNode}) =>{
 
     const signIn = (token:string|undefined, user:IUser|undefined) =>{
         if(token){
-            localStorage.setItem('authToken',token)
+            const extendToken = encrypt(token)
+            localStorage.setItem('authToken',extendToken)
         }
         if(user){
-            localStorage.setItem('user',JSON.stringify(user))
+            const extendUser = encrypt(JSON.stringify(user))
+            localStorage.setItem('user',extendUser)
         }
         if((localStorage.getItem('authToken') && localStorage.getItem('user'))!==null||undefined){
             setSession({
