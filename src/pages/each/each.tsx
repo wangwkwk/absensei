@@ -19,8 +19,8 @@ const Each = () =>{
 
   // Jika error disebabkan oleh file js yang gagal dimuat (deploy baru)
   if (
-    error.message.includes("Failed to fetch dynamically imported module") || 
-    error.name === "ChunkLoadError"
+    error?.message.includes("Failed to fetch dynamically imported module") || 
+    error?.name === "ChunkLoadError"
   ) {
     // Paksa browser memuat ulang halaman untuk mengambil file index.html terbaru
     window.location.reload();

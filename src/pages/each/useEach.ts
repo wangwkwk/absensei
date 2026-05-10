@@ -50,10 +50,10 @@ const useEach = () =>{
     const {mutate, isPending} = useMutation({
         mutationFn:handleUpdate,
         onError:(error:any)=>{
-            if(error?.response?.data.meta.message !== undefined){
+            if(error?.response?.data.meta?.message !== undefined){
                 toast.error(error?.response?.data.meta.message)
             }else{
-                toast.error(error.message)
+                toast.error(error?.message)
             }
         },
         onSuccess:()=>{
