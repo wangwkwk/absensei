@@ -37,32 +37,6 @@ const useEach = () =>{
 
     const handleUpdate = async () =>{ 
         if(location.lat===0||location.lgt===0) throw new Error("Lokasi tidak ditemukan");
-                navigator.geolocation.getCurrentPosition(
-            (position)=>{
-                setLocation({lat:position.coords.latitude, lgt:position.coords.longitude})
-            },
-            (error)=>{
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        toast.error("Kamu harus mengizinkan akses lokasi untuk absen.");
-                        break
-                    case error.POSITION_UNAVAILABLE:
-                        toast.error("Informasi lokasi tidak tersedia saat ini.");
-                        break
-                    case error.TIMEOUT:
-                        toast.error("Permintaan lokasi melebihi batas waktu (timeout).");
-                        break
-                    default:
-                        toast.error("Terjadi kesalahan yang tidak diketahui.");
-                        break
-                        }
-                    },
-            {
-                enableHighAccuracy:true,
-                timeout:10000,
-                maximumAge:0
-            }
-        )
         if(dataAbsen?.data?.data?.location!==undefined){
             const absenLocation = dataAbsen?.data?.data?.location
             const jarak = hitungJarak(absenLocation?.lat,absenLocation?.lgt,location.lat,location.lgt)
@@ -95,6 +69,7 @@ const useEach = () =>{
         submitUpdate,
         setPemainId,
         setLocation,
+        pemainId,
         id,
         location
     }
