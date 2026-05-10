@@ -57,7 +57,7 @@ const useEach = () =>{
             }
         },
         onSuccess:()=>{
-            // window.location.href = `/forEach/Success`
+            window.location.href = `/forEach/Success`
         }
     })
 
