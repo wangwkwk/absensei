@@ -1,11 +1,9 @@
 import { Autocomplete, AutocompleteItem, Button, Skeleton, Spinner } from "@heroui/react"
 import useEach from "./useEach"
-import { toast } from "react-toastify"
 
 const Each = () =>{
     const {
         setPemainId,
-        setLocation,
         dataAbsen,
         isPending,
         submitUpdate,

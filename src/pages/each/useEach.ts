@@ -100,7 +100,6 @@ const useEach = () =>{
         isPending,
         submitUpdate,
         setPemainId,
-        setLocation,
         pemainId,
         id,
         location
