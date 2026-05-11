@@ -63,7 +63,7 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
 
     const handleFetchAddAbsensi = async (date:any) =>{
         const getLocation = () => {
-            return new Promise<{lat:number,lgt:number}>((resolve,reject)=>{
+            return new Promise<{lat:number,lgt:number}>((resolve)=>{
                 navigator.geolocation.getCurrentPosition(
             (position)=>{
                 resolve({lat:position.coords.latitude,lgt:position.coords.longitude})
