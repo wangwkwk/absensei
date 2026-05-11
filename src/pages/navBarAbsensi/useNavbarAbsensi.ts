@@ -62,9 +62,11 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
 
 
     const handleFetchAddAbsensi = async (date:any) =>{
-        navigator.geolocation.getCurrentPosition(
+        const getLocation = () => {
+            return new Promise<{lat:number,lgt:number}>((resolve,reject)=>{
+                navigator.geolocation.getCurrentPosition(
             (position)=>{
-                setLocation({lat:position.coords.latitude,lgt:position.coords.longitude})
+                resolve({lat:position.coords.latitude,lgt:position.coords.longitude})
             },
             (error)=>{
                 switch (error.code) {
@@ -88,6 +90,10 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
                 maximumAge:0
             }
         )
+            })
+        }
+        const coordinate = await getLocation()
+        setLocation({lat:coordinate.lat,lgt:coordinate.lgt})
         if(location.lat===null||location.lgt===null) throw new Error('Lokasi tidak ada')
         const {data} = await instance.post(`${path.absen}`, {
             date:date as DateValue,
@@ -106,9 +112,7 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
         },
         onSuccess: (data)=>{
             toast.success("Berhasil menambah Absensi")
-            window.location.href = `/category/:id/${data.data.data._id}`
-            queryClient.invalidateQueries({queryKey:["absensi"]})
-            queryClient.invalidateQueries({queryKey:["ABSEN"]})
+            window.location.href = `/category/${categoryId}/${data.data.data._id}`
             reset()
             setCreate(false)
         }

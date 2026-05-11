@@ -41,36 +41,7 @@ const Each = () =>{
                         placeholder="Ketik untuk mencari..."
                         className="max-w-xs"
                         defaultItems={dataAbsen?.data}
-                        onSelectionChange={(e)=>{
-                            navigator.geolocation.getCurrentPosition(
-                                (position)=>{
-                                    setLocation({lat:position.coords.latitude, lgt:position.coords.longitude})
-                                },
-                                (error)=>{
-                                    switch (error.code) {
-                                        case error.PERMISSION_DENIED:
-                                            toast.error("Kamu harus mengizinkan akses lokasi untuk absen.");
-                                            break
-                                        case error.POSITION_UNAVAILABLE:
-                                            toast.error("Informasi lokasi tidak tersedia saat ini.");
-                                            break
-                                        case error.TIMEOUT:
-                                            toast.error("Permintaan lokasi melebihi batas waktu (timeout).");
-                                            break
-                                        default:
-                                            toast.error("Terjadi kesalahan yang tidak diketahui.");
-                                            break
-                                            }
-                                        },
-                                {
-                                    enableHighAccuracy:true,
-                                    timeout:10000,
-                                    maximumAge:0
-                                }
-                            )
-                        setPemainId(e)
-                        }}
-                    >
+                        onSelectionChange={(e)=>{setPemainId(e)}}>
                         {data?.map((item:any) => (
                         <AutocompleteItem key={item.pemainId} textValue={item.name}>
                             {item.name}
