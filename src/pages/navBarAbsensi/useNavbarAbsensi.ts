@@ -16,7 +16,6 @@ import { useParams } from "react-router"
 const addAbsensiSchema = z.object({date:z.custom<DateValue|ZonedDateTime>((value)=>{return value !== undefined},"Masukkan tanggal absensi")})
 
 const useNavbarAbsensi = () =>{
-const [location, setLocation] = useState<{lat:any,lgt:any}>({lat:null,lgt:null})
 const {control, handleSubmit, formState:{errors}, reset, setValue} = useForm({resolver:zodResolver(addAbsensiSchema)})
 const queryClient = useQueryClient()
 
@@ -86,14 +85,13 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
                     },
             {
                 enableHighAccuracy:true,
-                timeout:10000,
+                timeout:100000,
                 maximumAge:0
             }
         )
             })
         }
-        const coordinate = await getLocation()
-        setLocation({lat:coordinate.lat,lgt:coordinate.lgt})
+        const location = await getLocation()
         if(location.lat===null||location.lgt===null) throw new Error('Lokasi tidak ada')
         const {data} = await instance.post(`${path.absen}`, {
             date:date as DateValue,

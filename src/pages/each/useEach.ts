@@ -68,10 +68,10 @@ const useEach = () =>{
         }
         const coordinate = await getLocation()
         setLocation({lat:coordinate.lat,lgt:coordinate.lgt})
-        if(location.lat===0||location.lgt===0) throw new Error("Lokasi tidak ditemukan");
+        if(coordinate.lat===0||coordinate.lgt===0) throw new Error("Lokasi tidak ditemukan");
         if(dataAbsen?.data?.data?.location!==undefined){
             const absenLocation = dataAbsen?.data?.data?.location
-            const jarak = hitungJarak(absenLocation?.lat,absenLocation?.lgt,location.lat,location.lgt)
+            const jarak = hitungJarak(absenLocation?.lat,absenLocation?.lgt,coordinate.lat,coordinate.lgt)
             console.log(jarak)
             if(jarak > 100) throw new Error("Anda jauh dari lokasi absensi")
         }
