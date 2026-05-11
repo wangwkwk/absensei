@@ -85,8 +85,8 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
                     },
             {
                 enableHighAccuracy:true,
-                timeout:100000,
-                maximumAge:0
+                timeout:30000,
+                maximumAge:30000
             }
         )
             })
