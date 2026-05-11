@@ -1,7 +1,6 @@
 import { Autocomplete, AutocompleteItem, Button, Skeleton, Spinner } from "@heroui/react"
 import useEach from "./useEach"
 import { toast } from "react-toastify"
-import { useRouteError } from "react-router"
 
 const Each = () =>{
     const {
@@ -14,17 +13,6 @@ const Each = () =>{
         isFetchingAbsen,
         location
     } = useEach()
-
-    const error:any = useRouteError();
-
-  // Jika error disebabkan oleh file js yang gagal dimuat (deploy baru)
-  if (
-    error?.message.includes("Failed to fetch dynamically imported module") || 
-    error?.name === "ChunkLoadError"
-  ) {
-    // Paksa browser memuat ulang halaman untuk mengambil file index.html terbaru
-    window.location.reload();
-}
 
     let data:any = [] 
     if(dataAbsen!==undefined){

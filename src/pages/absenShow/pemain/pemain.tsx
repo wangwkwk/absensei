@@ -61,7 +61,7 @@ const PemainTab = () =>{
                         />
                 </div>
 
-            <Button color="secondary" size={width<=1024?"md":"lg"} className="" onPress={addPemainModal.onOpen}><strong>Masukkan Pelajar</strong></Button>
+            <Button color="secondary" size={width<=1024?"md":"lg"} className="text-medium" onPress={addPemainModal.onOpen}><strong>Masukkan Pelajar</strong></Button>
                 
             </div>
         )

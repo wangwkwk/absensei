@@ -77,7 +77,7 @@ return(
                                             )}
                                         </button>
                                     </form>
-                                    <strong className={cn("absolute lg:text-lg text-md transition-all translate-0",{"translate-y-12 scale-80":create})}>Buat absensi</strong>
+                                    <strong className={cn("absolute text-md transition-all translate-0",{"translate-y-12 scale-80":create})}>Buat absensi</strong>
 
                             </div>
 

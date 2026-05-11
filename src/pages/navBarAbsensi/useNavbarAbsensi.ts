@@ -104,8 +104,9 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
             toast.error(error.response.data.meta.message)
             reset()
         },
-        onSuccess: ()=>{
+        onSuccess: (data)=>{
             toast.success("Berhasil menambah Absensi")
+            window.location.href = `/category/:id/${data.data.data._id}`
             queryClient.invalidateQueries({queryKey:["absensi"]})
             queryClient.invalidateQueries({queryKey:["ABSEN"]})
             reset()
