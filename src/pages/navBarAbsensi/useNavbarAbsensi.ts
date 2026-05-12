@@ -30,7 +30,7 @@ const {
 
 
 const handleData = async () =>{
-    const {data} = await instance.get(`${path.absen}/${categoryId}`)
+    const {data} = await instance.get(`${path.absen}/${categoryId}?page=${currentPage}&limit=10`)
     return data
 }
 
