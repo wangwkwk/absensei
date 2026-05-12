@@ -6,6 +6,7 @@ import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { GENDER_LIST } from "../../components/hooks/useChangeUrl"
 import { search } from "../../components/any/search"
+import { titleChanger } from "../../components/libs/pageHead/pageHead"
 
 const EditAbsen = () =>{
     const {
@@ -35,12 +36,8 @@ const EditAbsen = () =>{
         const rawDate = dataEditAbsen?.data?.data?.date
 
         const filteredData = useMemo(()=>{
-            if(!data) {return []}
-            let dataFiltered:any = []
-            if(currentGender==="") {
-                dataFiltered = data
-            }
-            else if(currentGender!==""){
+            let dataFiltered:Array<any> = data ?? []
+            if(currentGender!==""){
                 const filtered = data.filter((item:IAbsenRecord)=>item.gender===currentGender)
                 dataFiltered = filtered
             }
@@ -62,6 +59,7 @@ const EditAbsen = () =>{
             return isNaN(date.getTime())?"":format(date,"dd MMMM yyyy",{locale:id})
         },[rawDate])
         
+        titleChanger(`${hari}, ${tanggal}`)
 
         const topContent =useMemo(()=>{
             return(

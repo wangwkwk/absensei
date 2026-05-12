@@ -12,11 +12,8 @@ const Each = () =>{
         location
     } = useEach()
 
-    let data:any = [] 
-    if(dataAbsen!==undefined){
-        data = dataAbsen?.data.data.hasil
-    }
-    data = data.filter((item:any)=>item.status === false)
+    let data:Array<any> = dataAbsen?.data?.data?.hasil ?? []
+    data = data.filter((item:any)=>item?.status === false)
     console.log(pemainId,location)
     return(
         <div className="w-full h-fit p-10">
@@ -41,8 +38,8 @@ const Each = () =>{
                         defaultItems={dataAbsen?.data}
                         onSelectionChange={(e)=>{setPemainId(e)}}>
                         {data?.map((item:any) => (
-                        <AutocompleteItem key={item.pemainId} textValue={item.name}>
-                            {item.name}
+                        <AutocompleteItem key={item?.pemainId} textValue={item?.name}>
+                            {item?.name}
                         </AutocompleteItem>
                         ))}
                     </Autocomplete>

@@ -21,8 +21,7 @@ const InputNewAbsensi = (props:Props) =>{
     const {create,handleAddAbsensi,handleSubmit,isPendingAddAbsensi,setCreate, control, errors, setValue} = props
 
     useEffect(()=>{
-    setValue("date",today(getLocalTimeZone()))
-
+        setValue("date",today(getLocalTimeZone()))
     },[create])
 
 return(
@@ -37,7 +36,8 @@ return(
                                         control={control}
                                         render={({field})=>(
                                             <DatePicker
-                                            {...field}      
+                                            {...field}
+                                            aria-label="tanggal"      
                                             variant="underlined"
                                             className="w-fit"
                                             hideTimeZone

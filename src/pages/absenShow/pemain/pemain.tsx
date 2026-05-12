@@ -33,10 +33,8 @@ const PemainTab = () =>{
     },[])
 
     const filteredData  = useMemo(()=>{
-        let dataFiltered = []
-        if(dataPemain===null||dataPemain===undefined) dataFiltered = [];
-        else if(currentGender === "") dataFiltered = dataPemain!!.data.data;
-        else dataFiltered = dataPemain!!.data.data.filter((item:IPemain)=>item.gender===currentGender)
+        let dataFiltered:Array<any> = dataPemain?.data?.data ??  [];
+        if(currentGender !== "") dataFiltered = dataPemain!!.data.data.filter((item:IPemain)=>item.gender===currentGender)
         return search(dataFiltered, currentSearching)
     },[dataPemain,currentGender, currentSearching])
 

@@ -86,7 +86,7 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
             {
                 enableHighAccuracy:true,
                 timeout:30000,
-                maximumAge:30000
+                maximumAge:0
             }
         )
             })
@@ -105,8 +105,11 @@ const {mutate, isPending:isPendingDeleteAbsensi} = useMutation({
         mutationFn:handleFetchAddAbsensi,
 
         onError:(error:any)=>{
-            toast.error(error.response.data.meta.message)
-            reset()
+            if(error?.response !==undefined ){
+                toast.error(error?.response.data.meta.message)
+            }else{
+                toast.error(error?.message)
+            }
         },
         onSuccess: (data)=>{
             toast.success("Berhasil menambah Absensi")

@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js'
 
-export const search = (data:[], searching:string) =>{
+export const search = (data:Array<any>, searching:string) =>{
     // const {currentSearching} =useChangeUrl()
     const options = {
         keys : ["name"],

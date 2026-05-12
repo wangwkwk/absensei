@@ -53,8 +53,8 @@ const router =createBrowserRouter([
               {path: '/auth/success', element: <RegisterSuccess/>, errorElement:< ErrorBoundary />},
             ],
             errorElement:< ErrorBoundary />
-          }
-      ])
+          }      
+        ])
 
 const queryClient = new QueryClient({
   defaultOptions:{

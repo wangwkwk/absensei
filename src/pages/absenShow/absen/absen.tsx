@@ -91,17 +91,14 @@ const topContent = useMemo(()=>{
 
 
     const dataAbsen = useMemo(()=>{
-        let dataFiltered = []
-        if(data === undefined|| data === null) {dataFiltered = []}
-        else if(currentGender==="") {dataFiltered = data.data.data.data}
-        else {
-            dataFiltered = data.data.data.data.filter((item:IAbsenRecord)=>item.gender === currentGender)
+        let dataFiltered:Array<any> = data?.data?.data?.data ?? []
+        if(currentGender!=="") {
+            dataFiltered = dataFiltered.filter((item:IAbsenRecord)=>item.gender === currentGender)
         }
         return search(dataFiltered,currentSearching)
-    },[data,currentGender,currentSearching])
-
-
-if(!!data){
+    },[data,currentGender,currentSearching])    
+    
+    if(!!data){
     return(
         <div className=" w-full h-full overflow-scroll scrollbar-hide">
             <h1 className="w-full h-fit pl-7 pt-2 ">
