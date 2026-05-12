@@ -10,8 +10,10 @@ export function ErrorBoundary() {
     error.name === "ChunkLoadError"
   ) {
     // Paksa browser memuat ulang halaman untuk mengambil file index.html terbaru
-    window.location.reload();
+    if(!sessionStorage.getItem('chunk_reloaded')){
+      window.location.reload();
     return <div>Memperbarui aplikasi...</div>;
+    }
   }
 
   // Jika error lain

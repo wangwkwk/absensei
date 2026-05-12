@@ -22,21 +22,25 @@ import Success from './pages/each/success.tsx'
 import Activation, { activationLoader } from './pages/Auth/activation/activation.tsx'
 import { ErrorBoundary } from './error.tsx'
 
-if('serviceWorker' in navigator){    //bila tidak ingin menggunakan PWA
-  navigator.serviceWorker.getRegistrations().then((registrations)=>{
-    if(registrations.length>0){
-      for (let registration of registrations){
-        registration.unregister()
+if ('serviceWorker' in navigator) {    
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    if (registrations.length > 0) {
+      for (let registration of registrations) {
+        registration.unregister();
       }
-      caches.keys().then((keylist)=>{
+      caches.keys().then((keylist) => {
         return Promise.all(
-          keylist.map((key)=>{return caches.delete(key)})
-        )
-      }).then(()=>{
-        window.location.reload()
-      })
+          keylist.map((key) => { return caches.delete(key); })
+        );
+      }).then(() => {
+        // REM DARURAT: Cek apakah kita sudah pernah melakukan reload di sesi ini
+        if (!sessionStorage.getItem('sw_cleared')) {
+          sessionStorage.setItem('sw_cleared', 'true'); // Tandai bahwa sudah di-clear
+          window.location.reload(); // Lakukan reload SATU KALI SAJA
+        }
+      });
     }
-  })
+  });
 }
 
 const router =createBrowserRouter([
