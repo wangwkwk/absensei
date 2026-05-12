@@ -22,22 +22,22 @@ import Success from './pages/each/success.tsx'
 import Activation, { activationLoader } from './pages/Auth/activation/activation.tsx'
 import { ErrorBoundary } from './error.tsx'
 
-// if('serviceWorker' in navigator){    bila tidak ingin menggunakan PWA
-//   navigator.serviceWorker.getRegistrations().then((registrations)=>{
-//     if(registrations.length>0){
-//       for (let registration of registrations){
-//         registration.unregister()
-//       }
-//       caches.keys().then((keylist)=>{
-//         return Promise.all(
-//           keylist.map((key)=>{return caches.delete(key)})
-//         )
-//       }).then(()=>{
-//         window.location.reload()
-//       })
-//     }
-//   })
-// }
+if('serviceWorker' in navigator){    //bila tidak ingin menggunakan PWA
+  navigator.serviceWorker.getRegistrations().then((registrations)=>{
+    if(registrations.length>0){
+      for (let registration of registrations){
+        registration.unregister()
+      }
+      caches.keys().then((keylist)=>{
+        return Promise.all(
+          keylist.map((key)=>{return caches.delete(key)})
+        )
+      }).then(()=>{
+        window.location.reload()
+      })
+    }
+  })
+}
 
 const router =createBrowserRouter([
           {path:'/forEach/:id',element:<Each/>, errorElement:<ErrorBoundary/>},
