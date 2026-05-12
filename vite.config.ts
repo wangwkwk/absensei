@@ -40,6 +40,11 @@ export default defineConfig({
             purpose: 'any maskable' // Penting agar ikon terlihat bagus di Android
           }
         ]
+      },
+      workbox:{
+        cleanupOutdatedCaches: true, // Otomatis buang cache lama
+        skipWaiting: true,           // Langsung pakai versi baru tanpa nunggu
+        clientsClaim: true
       }
     })
   ],
