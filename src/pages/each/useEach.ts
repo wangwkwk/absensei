@@ -89,6 +89,7 @@ const useEach = () =>{
             }
         },
         onSuccess:()=>{
+            localStorage.setItem('sudah',id!)
             window.location.href = `/forEach/Success`
         }
     })

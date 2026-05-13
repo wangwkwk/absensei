@@ -1,5 +1,6 @@
 import { Autocomplete, AutocompleteItem, Button, Skeleton, Spinner } from "@heroui/react"
 import useEach from "./useEach"
+import { useEffect } from "react"
 
 const Each = () =>{
     const {
@@ -9,11 +10,18 @@ const Each = () =>{
         submitUpdate,
         pemainId,
         isFetchingAbsen,
-        location
+        location,
+        id
     } = useEach()
 
     let data:Array<any> = dataAbsen?.data?.data?.hasil ?? []
     data = data.filter((item:any)=>item?.status === false)
+    useEffect(()=>{
+        const sudah = localStorage.getItem('sudah')
+        if(id === sudah){
+            window.location.href = `/forEach/Success`
+        }
+    },[])
     console.log(pemainId,location)
     return(
         <div className="w-full h-fit p-10">
