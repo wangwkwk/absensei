@@ -83,7 +83,7 @@ const useEach = () =>{
         mutationFn:handleUpdate,
         onError:(error:any)=>{
             if(error?.response?.data.meta?.message !== undefined){
-                toast.error(error?.response?.data?.meta?.message)
+                toast.error(error?.response?.data?.meta?.\message)
             }else{
                 toast.error(error?.message)
             }
