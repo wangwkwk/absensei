@@ -125,9 +125,10 @@ const topContent = useMemo(()=>{
                     <TableColumn aria-label="gender" key="gender">Gender</TableColumn>
                     {!!data && data?.data.data.tanggalList.map((t:tanggalList) => {
                         const hari = format(new Date(t.date),"EEEE",{locale:id})
+                        const tanggal = format(new Date(t.date),"dd-mm",{locale:id})
                         return(
                         <TableColumn className="text-center" key={t.index}>
-                        {t.index}
+                        {tanggal}
                         <div className="text-xs text-gray-400">{hari}</div>
                         </TableColumn>
                     )})}

@@ -21,6 +21,7 @@ import Each from './pages/each/each.tsx'
 import Success from './pages/each/success.tsx'
 import Activation, { activationLoader } from './pages/Auth/activation/activation.tsx'
 import { ErrorBoundary } from './error.tsx'
+import Test from './pages/test.tsx'
 
 // if ('serviceWorker' in navigator) {    
 //   navigator.serviceWorker.getRegistrations().then((registrations) => {
@@ -44,6 +45,7 @@ import { ErrorBoundary } from './error.tsx'
 // }
 
 const router =createBrowserRouter([
+          {path:'/test',element:<Test/>},
           {path:'/forEach/:id',element:<Each/>, errorElement:<ErrorBoundary/>},
           {path:"/forEach/Success", element:<Success/>, errorElement:< ErrorBoundary />},
           {path:'/auth/activation', element:<Activation/>, errorElement:< ErrorBoundary />, loader:activationLoader},
